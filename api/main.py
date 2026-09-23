@@ -4,6 +4,7 @@ from api.routers.bookings import router as bookings_router
 from api.routers.rooms import router as rooms_router
 from api.routers.availability import router as availability_router
 from api.routers.auth import router as auth_router
+from api.routers.agent import router as agent_router
 
 app = FastAPI(
     title="BoardBot API",
@@ -23,6 +24,8 @@ app.include_router(availability_router)
 
 print("REGISTERING AUTH ROUTER")
 app.include_router(auth_router)
+
+app.include_router(agent_router)
 
 @app.get("/health")
 def health_check():

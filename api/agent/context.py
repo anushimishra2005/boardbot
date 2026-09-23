@@ -6,6 +6,8 @@ class AgentContext:
         self.last_tool_name: str | None = None
         self.last_tool_result: dict | None = None
         self.last_booking_id: int | None = None
+        self.pending_action: str | None = None
+        self.pending_arguments: dict | None = None
 
     def remember_tool_result(
         self,
@@ -17,7 +19,22 @@ class AgentContext:
 
         if result.get("booking_id") is not None:
             self.last_booking_id = result["booking_id"]
+    def set_pending_action(
+        self,
+        tool_name: str,
+        arguments: dict,
+    ) -> None:
+        """Store a mutation that is waiting for user confirmation."""
 
+        self.pending_action = tool_name
+        self.pending_arguments = arguments
+
+
+    def clear_pending_action(self) -> None:
+        """Clear any mutation waiting for confirmation."""
+
+        self.pending_action = None
+        self.pending_arguments = None
     def resolve_booking_reference(
         self,
         reference: str,

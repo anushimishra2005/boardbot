@@ -150,19 +150,44 @@ def test_create_booking_rejects_overlap():
         db.close()
 def test_list_bookings():
     db = SessionLocal()
+    booking = None
 
     try:
+        booking = create_booking(
+            db=db,
+            user_id=1,
+            room_id=1,
+            start_time=datetime(
+                2031, 3, 5, 10, 0,
+                tzinfo=timezone.utc,
+            ),
+            end_time=datetime(
+                2031, 3, 5, 11, 0,
+                tzinfo=timezone.utc,
+            ),
+            attendees=5,
+        )
+
         bookings = list_bookings(db)
 
         assert isinstance(bookings, list)
         assert len(bookings) >= 1
 
-        for booking in bookings:
-            assert booking.id is not None
-            assert booking.room_id is not None
-            assert booking.user_id is not None
+        matching_booking = next(
+            item for item in bookings
+            if item.id == booking.id
+        )
+
+        assert matching_booking.room_id == 1
+        assert matching_booking.user_id == 1
 
     finally:
+        if booking is not None:
+            db.delete(booking)
+            db.commit()
+        else:
+            db.rollback()
+
         db.close()
 
 def test_cancel_booking():

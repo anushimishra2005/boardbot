@@ -81,6 +81,7 @@ def create_booking(
     existing_booking = db.execute(
         select(Booking).where(
             Booking.room_id == room_id,
+            Booking.status != "cancelled",
             Booking.start_time < end_time,
             Booking.end_time > start_time,
         )

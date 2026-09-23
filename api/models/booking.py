@@ -80,6 +80,7 @@ class Booking(Base):
                 text("tstzrange(start_time, end_time, '[)')"),
                 "&&",
             ),
+            where=text("status != 'cancelled'"),
             name="booking_no_room_overlap",
-        ),
+        )
     )

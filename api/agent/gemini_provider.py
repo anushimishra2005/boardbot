@@ -39,3 +39,12 @@ class GeminiProvider:
             input=user_message,
             tools=self.tools,
         )
+    def continue_interaction(self, interaction_id: str, function_results: list):
+        """Continue a Gemini interaction with tool results."""
+        
+        return self.client.interactions.create(
+            model=self.model_name,
+            previous_interaction_id=interaction_id,
+            input=function_results,
+            tools=self.tools,
+        )
